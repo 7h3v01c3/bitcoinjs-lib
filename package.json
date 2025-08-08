@@ -1,7 +1,7 @@
 {
   "name": "bitcoinjs-lib",
   "version": "7.0.0-rc.0",
-  "description": "Client-side Bitcoin JavaScript library",
+  "description": "Client-side Bitcoin/Divi JavaScript library",
   "type": "module",
   "main": "./src/cjs/index.cjs",
   "module": "./src/esm/index.js",
@@ -22,11 +22,10 @@
     "node": ">=18.0.0"
   },
   "keywords": [
-    "bitcoinjs",
-    "bitcoin",
+    "divijs",
+    "divi",
     "browserify",
-    "javascript",
-    "bitcoinjs"
+    "javascript"
   ],
   "scripts": {
     "audit": "better-npm-audit audit -l high",

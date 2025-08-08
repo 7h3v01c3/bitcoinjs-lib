@@ -64,7 +64,7 @@ export const testnet = {
   scriptHash: 0xc4,
   wif: 0xef,
 };
-exports.divi = {
+exports const divi = {
   messagePrefix: '\x19Divi Signed Message:\n',
   bech32: 'divi',
   bip32: {

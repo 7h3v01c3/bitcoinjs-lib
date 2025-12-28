@@ -1,21 +1,33 @@
-# bitcoinjs-lib
+# divijs-lib
 
-[![Github CI](https://github.com/bitcoinjs/bitcoinjs-lib/actions/workflows/main_ci.yml/badge.svg)](https://github.com/bitcoinjs/bitcoinjs-lib/actions/workflows/main_ci.yml) [![NPM](https://img.shields.io/npm/v/bitcoinjs-lib.svg)](https://www.npmjs.org/package/bitcoinjs-lib) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 
-A javascript Bitcoin library for node.js and browsers. Written in TypeScript, but committing the JS files to verify.
+A JavaScript DIVI library for node.js and browsers, based on bitcoinjs-lib. Written in TypeScript, but committing the JS files to verify.
+
+**This is a DIVI-enhanced fork of bitcoinjs-lib**, adding support for:
+- DIVI network configurations (mainnet and testnet)
+- DIVI-specific opcodes (OP_REQUIRE_COINSTAKE, OP_CHECKCOLDSTAKEVERIFY, OP_EXCHANGEADDR)
+- DIVI vault script support
+- Legacy address support (DIVI does not yet support SegWit or Bech32)
 
 Released under the terms of the [MIT LICENSE](LICENSE).
 
 ## Should I use this in production?
-If you are thinking of using the *master* branch of this library in production, **stop**.
-Master is not stable; it is our development branch, and [only tagged releases may be classified as stable](https://github.com/bitcoinjs/bitcoinjs-lib/tags).
+If you are thinking of using the *divijs-lib* branch of this library in production, **stop**.
+This branch is not stable; it is our development branch, and only tagged releases may be classified as stable.
 
 ## Can I trust this code?
 > Don't trust. Verify.
 
-We recommend every user of this library and the [bitcoinjs](https://github.com/bitcoinjs) ecosystem audit and verify any underlying code for its validity and suitability,  including reviewing any and all of your project's dependencies.
+We recommend every user of this library audit and verify any underlying code for its validity and suitability, including reviewing any and all of your project's dependencies.
 
-Mistakes and bugs happen, but with your help in resolving and reporting [issues](https://github.com/bitcoinjs/bitcoinjs-lib/issues), together we can produce open source software that is:
+**DIVI-Specific Considerations:**
+- This library supports DIVI vaults and staking operations - ensure you understand the security implications
+- DIVI does not yet support SegWit or Bech32 - uses legacy addresses (P2PKH/P2SH)
+- Vault operations require careful key management - owner keys and host keys must be secured separately
+- Staking operations involve off-chain payments to hosts - verify all service agreements
+
+Mistakes and bugs happen, but with your help in resolving and reporting issues, together we can produce open source software that is:
 
 - Easy to audit and verify,
 - Tested, with test coverage >95%,
@@ -24,26 +36,26 @@ Mistakes and bugs happen, but with your help in resolving and reporting [issues]
 - Friendly, with a strong and helpful community, ready to answer questions.
 
 ## Documentation
-Visit our [documentation](https://bitcoinjs.github.io/bitcoinjs-lib/) to explore the available resources. We're continually enhancing our documentation with additional features for an enriched experience. If you need further guidance beyond what our [examples](#examples) offer, don't hesitate to  [ask for help](https://github.com/bitcoinjs/bitcoinjs-lib/issues/new). We're here to assist you.
+This library is based on [bitcoinjs-lib](https://github.com/bitcoinjs/bitcoinjs-lib) and maintains compatibility with most Bitcoin functionality while adding DIVI-specific features.
 
-You can find a [Web UI](https://bitcoincore.tech/apps/bitcoinjs-ui/index.html) that covers most of the `psbt.ts`, `transaction.ts` and `p2*.ts` APIs [here](https://bitcoincore.tech/apps/bitcoinjs-ui/index.html).
+For DIVI-specific features:
+- DIVI network configurations: `import { divi, diviTestnet } from 'divijs-lib'`
+- DIVI opcodes: `import { OPS } from 'divijs-lib'` (includes OP_REQUIRE_COINSTAKE, OP_CHECKCOLDSTAKEVERIFY, etc.)
+- Legacy address support: DIVI uses P2PKH (addresses starting with 'D') and P2SH (addresses starting with '3')
 
-## How can I contact the developers outside of Github?
-**Most of the time, this is not appropriate. Creating issues and pull requests in the open will help others with similar issues, so please try to use public issues and pull requests for communication.**
+If you need further guidance, please create an issue in this repository.
 
-That said, sometimes developers might be open to taking things off the record (ie. You want to share code that you don't want public to get help with it). In that case, please negotiate on the public issues as to where you will contact.
+## How can I contact the developers?
+This is a personal repository for DIVI support. For general bitcoinjs-lib questions, please refer to the [original bitcoinjs-lib repository](https://github.com/bitcoinjs/bitcoinjs-lib).
 
-We have created public rooms on IRC (`#bitcoinjs` on `libera.chat`) and Matrix (`#bitcoinjs-dev:matrix.org`). These two channels have been joined together in a Matrix "Space" which has the Matrix room AND an IRC bridge room that can converse with the IRC room. The "Space" is `#bitcoinjs-space:matrix.org`.
-
-Matrix and IRC both have functions for direct messaging, but IRC is not end to end encrypted, so Matrix is recommended for most communication. The official Matrix client maintained by the Matrix core team is called "Element" and can be downloaded here: https://element.io/download (Account creation is free on the matrix.org server, which is the default setting for Element.)
-
-We used to have a Slack. It is dead. If you find it, no one will answer you most likely.
-
-No we will not make a Discord.
+Open up a discussion here or hit me up on Telegram.
 
 ## Installation
+
+**Note:** This library is not yet published to npm. Install directly from GitHub:
+
 ``` bash
-npm install bitcoinjs-lib
+npm install github:7h3v01c3/bitcoinjs-lib#divijs-lib
 # optionally, install a key derivation library as well
 npm install ecpair bip32
 # ecpair is the ECPair class for single keys
@@ -73,7 +85,7 @@ Unfortunately, this isn't a silver bullet.
 Often, Javascript itself is working against us by bypassing these counter-measures.
 
 Problems in [`Buffer (UInt8Array)`](https://github.com/feross/buffer), for example, can trivially result in **catastrophic fund loss** without any warning.
-It can do this through undermining your random number generation, accidentally producing a [duplicate `k` value](https://web.archive.org/web/20160308014317/http://www.nilsschneider.net/2013/01/28/recovering-bitcoin-private-keys.html), sending Bitcoin to a malformed output script, or any of a million different ways.
+It can do this through undermining your random number generation, accidentally producing a [duplicate `k` value](https://web.archive.org/web/20160308014317/http://www.nilsschneider.net/2013/01/28/recovering-bitcoin-private-keys.html), sending DIVI to a malformed output script, or any of a million different ways.
 Running tests in your target environment is important and a recommended step to verify continuously.
 
 Finally, **adhere to best practice**.
@@ -84,34 +96,29 @@ We are not an authoritative source of best practice, but, at the very least:
 * [Don't use `Math.random`](https://security.stackexchange.com/questions/181580/why-is-math-random-not-designed-to-be-cryptographically-secure) - in any way - don't.
 * Enforce that users always verify (manually) a freshly-decoded human-readable version of their intended transaction before broadcast.
 * [Don't *ask* users to generate mnemonics](https://en.bitcoin.it/wiki/Brainwallet#cite_note-1), or 'brain wallets',  humans are terrible random number generators.
+* **DIVI Vault Security**: Keep owner keys and host keys separate. Owner keys should be stored securely offline when possible. Host keys enable staking but should not have spending control.
+* **DIVI Staking**: Understand the difference between vault staking (off-chain host payments) and cold staking delegation (on-chain fee extraction). Vaults provide better decentralization.
+* **DIVI Addresses**: DIVI does not yet support SegWit or Bech32. Use legacy addresses (P2PKH/P2SH) only.
 * Lastly, if you can, use [Typescript](https://www.typescriptlang.org/) or similar.
 
 
 ### Browser
-The recommended method of using `bitcoinjs-lib` in your browser is through [browserify](http://browserify.org/).
+The recommended method of using `divijs-lib` in your browser is through [browserify](http://browserify.org/).
 
 If you'd like to use a different (more modern) build tool than `browserify`, you can compile just this library and its dependencies into a single JavaScript file:
 
 ```sh
-$ npm install bitcoinjs-lib browserify
-$ npx browserify --standalone bitcoin -o bitcoinjs-lib.js <<< "module.exports = require('bitcoinjs-lib');"
+$ npm install github:7h3v01c3/bitcoinjs-lib#divijs-lib browserify
+$ npx browserify --standalone divi -o divijs-lib.js <<< "module.exports = require('bitcoinjs-lib');"
 ```
 
 Which you can then import as an ESM module:
 
 ```javascript
-<script type="module">import "/scripts/bitcoinjs-lib.js"</script>
+<script type="module">import "/scripts/divijs-lib.js"</script>
 ````
 
-#### Using Taproot:
-When utilizing Taproot features with bitcoinjs-lib, you may need to include an additional ECC (Elliptic Curve Cryptography) library. The commonly used `tiny-secp256k1` library, however, might lead to compatibility issues due to its reliance on WASM (WebAssembly). The following alternatives may be used instead, though they may be significantly slower for high volume of signing and pubkey deriving operations.
-
-#### Alternatives for ECC Library:
-1. `@bitcoin-js/tiny-secp256k1-asmjs`
-   A version of `tiny-secp256k1` compiled to ASM.js directly from the WASM version, potentially better supported in browsers. This is the slowest option.
-2. `@bitcoinerlab/secp256k1`
-   Another alternative library for ECC functionality. This requires access to the global `BigInt` primitive.
-For advantages and detailed comparison of these libraries, visit: [tiny-secp256k1 GitHub page](https://github.com/bitcoinjs/tiny-secp256k1).
+**Note:** DIVI does not yet support SegWit or Bech32. This library focuses on legacy address support (P2PKH/P2SH) and DIVI-specific features like vaults and staking.
 
 **NOTE**: We use Node Maintenance LTS features, if you need strict ES5, use [`--transform babelify`](https://github.com/babel/babelify) in conjunction with your `browserify` step (using an [`es2015`](https://babeljs.io/docs/plugins/preset-es2015/) preset).
 
@@ -121,52 +128,32 @@ For advantages and detailed comparison of these libraries, visit: [tiny-secp256k
 Type declarations for Typescript are included in this library. Normal installation should include all the needed type information.
 
 ## Examples
-The below examples are implemented as integration tests, they should be very easy to understand.
-Otherwise, pull requests are appreciated.
-Some examples interact (via HTTPS) with a 3rd Party Blockchain Provider (3PBP).
 
+**DIVI-Specific Examples:**
+- Generate a DIVI mainnet address (P2PKH, starts with 'D')
+- Generate a DIVI testnet address
+- Create a DIVI vault script with OP_REQUIRE_COINSTAKE
+- Create a DIVI transaction with legacy addresses
+- Use DIVI network configurations
 
-- [Taproot Key Spend](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/taproot.spec.ts)
-- [Create (and broadcast via 3PBP) a taproot script-path spend Transaction - OP_CHECKSIG](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/taproot.spec.ts)
-- [Create (and broadcast via 3PBP) a taproot script-path spend Transaction - OP_CHECKSEQUENCEVERIFY](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/taproot.spec.ts)
-- [Create (and broadcast via 3PBP) a taproot script-path spend Transaction - OP_CHECKSIGADD (3-of-3)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/taproot.spec.ts)
-- [Generate a random address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Import an address via WIF](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a 2-of-3 P2SH multisig address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a SegWit address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a SegWit P2SH address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a SegWit 3-of-4 multisig address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a SegWit 2-of-2 P2SH multisig address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Support the retrieval of transactions for an address (3rd party blockchain)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a Testnet address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Generate a Litecoin address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/addresses.spec.ts)
-- [Create a 1-to-1 Transaction](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a typical Transaction](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with an OP\_RETURN output](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with a 2-of-4 P2SH(multisig) input](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with a SegWit P2SH(P2WPKH) input](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with a SegWit P2WPKH input](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with a SegWit P2PK input](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction with a SegWit 3-of-4 P2SH(P2WSH(multisig)) input](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction and sign with an HDSigner interface (bip32)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/transactions.spec.ts)
-- [Import a BIP32 testnet xpriv and export to WIF](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Export a BIP32 xpriv, then import it](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Export a BIP32 xpub](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Create a BIP32, bitcoin, account 0, external address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Create a BIP44, bitcoin, account 0, external address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Create a BIP49, bitcoin testnet, account 0, external address](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Use BIP39 to generate BIP32 addresses](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/bip32.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice can redeem the output after the expiry (in the past)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/cltv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice can redeem the output after the expiry (in the future)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/cltv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice and Bob can redeem the output at any time](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/cltv.spec.ts)
-- [Create (but fail to broadcast via 3PBP) a Transaction where Alice attempts to redeem before the expiry](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/cltv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice can redeem the output after the expiry (in the future) (simple CHECKSEQUENCEVERIFY)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/csv.spec.ts)
-- [Create (but fail to broadcast via 3PBP) a Transaction where Alice attempts to redeem before the expiry (simple CHECKSEQUENCEVERIFY)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/csv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Bob and Charles can send (complex CHECKSEQUENCEVERIFY)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/csv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice (mediator) and Bob can send after 2 blocks (complex CHECKSEQUENCEVERIFY)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/csv.spec.ts)
-- [Create (and broadcast via 3PBP) a Transaction where Alice (mediator) can send after 5 blocks (complex CHECKSEQUENCEVERIFY)](https://github.com/bitcoinjs/bitcoinjs-lib/blob/master/test/integration/csv.spec.ts)
+**Standard Examples (Compatible with DIVI):**
+- Generate a random address (using DIVI network)
+- Import an address via WIF
+- Generate a 2-of-3 P2SH multisig address
+- Create a 1-to-1 Transaction
+- Create a Transaction with an OP_RETURN output
+- Create a Transaction with a 2-of-4 P2SH(multisig) input
+- Create a Transaction and sign with an HDSigner interface (bip32)
+- Import a BIP32 testnet xpriv and export to WIF
+- Export a BIP32 xpriv, then import it
+- Export a BIP32 xpub
+- Use BIP39 to generate BIP32 addresses
+- Create a Transaction where Alice can redeem the output after the expiry (CLTV)
+- Create a Transaction where Alice can redeem the output after the expiry (CSV)
 
-If you have a use case that you feel could be listed here, please [ask for it](https://github.com/bitcoinjs/bitcoinjs-lib/issues/new)!
+**Note:** SegWit and Bech32 examples are not applicable to DIVI, as DIVI does not yet support SegWit or Bech32.
+
+If you have a DIVI-specific use case that you feel could be listed here, please create an issue!
 
 
 ## Contributing
@@ -190,16 +177,14 @@ npm run-script coverage
 - [BIP69](https://github.com/bitcoinjs/bip69) - Lexicographical Indexing of Transaction Inputs and Outputs
 - [Base58](https://github.com/cryptocoinjs/bs58) - Base58 encoding/decoding
 - [Base58 Check](https://github.com/bitcoinjs/bs58check) - Base58 check encoding/decoding
-- [Bech32](https://github.com/bitcoinjs/bech32) - A BIP173/BIP350 compliant Bech32/Bech32m encoding library
-- [coinselect](https://github.com/bitcoinjs/coinselect) - A fee-optimizing, transaction input selection module for bitcoinjs-lib.
+- [coinselect](https://github.com/bitcoinjs/coinselect) - A fee-optimizing, transaction input selection module
 - [merkle-lib](https://github.com/bitcoinjs/merkle-lib) - A performance conscious library for merkle root and tree calculations.
 - [minimaldata](https://github.com/bitcoinjs/minimaldata) - A module to check bitcoin policy: SCRIPT_VERIFY_MINIMALDATA
 
+**Note:** Bech32 libraries are not needed for DIVI, as DIVI does not yet support SegWit or Bech32.
 
-## Alternatives
-- [BCoin](https://github.com/indutny/bcoin)
-- [Bitcore](https://github.com/bitpay/bitcore)
-- [Cryptocoin](https://github.com/cryptocoinjs/cryptocoin)
+## Based On
+This library is a fork of [bitcoinjs-lib](https://github.com/bitcoinjs/bitcoinjs-lib), enhanced with DIVI-specific features while maintaining compatibility with the core Bitcoin functionality.
 
 
 ## LICENSE [MIT](LICENSE)

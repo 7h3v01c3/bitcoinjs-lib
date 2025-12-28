@@ -1,7 +1,7 @@
 /**
- * This module defines the network configurations for Bitcoin and DIVI networks, including message prefixes,
- * Bech32 address format (where applicable), BIP32 key derivation prefixes, and other address-related configurations.
- * It supports Bitcoin mainnet/testnet/regtest and DIVI mainnet/testnet networks.
+ * This module defines the network configurations for Bitcoin and its variants, including message prefixes,
+ * Bech32 address format, BIP32 key derivation prefixes, and other address-related configurations.
+ * It supports Bitcoin, Bitcoin testnet, and Bitcoin regtest networks.
  *
  * Additional information on address prefixes can be found here:
  * - https://en.bitcoin.it/wiki/List_of_address_prefixes
@@ -10,7 +10,7 @@
  */
 export interface Network {
     messagePrefix: string;
-    bech32: string | undefined;
+    bech32: string;
     bip32: Bip32;
     pubKeyHash: number;
     scriptHash: number;
@@ -21,15 +21,7 @@ interface Bip32 {
     private: number;
 }
 /**
- * Represents the DIVI mainnet configuration.
- */
-export declare const divi: Network;
-/**
- * Represents the DIVI testnet configuration.
- */
-export declare const diviTestnet: Network;
-/**
- * Represents the Bitcoin mainnet configuration.
+ * Represents the Bitcoin network configuration.
  */
 export declare const bitcoin: Network;
 /**
@@ -37,7 +29,7 @@ export declare const bitcoin: Network;
  */
 export declare const regtest: Network;
 /**
- * Represents the Bitcoin testnet configuration.
+ * Represents the testnet network configuration.
  */
 export declare const testnet: Network;
 export {};

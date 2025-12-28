@@ -116,7 +116,6 @@ declare enum OPS {
     OP_NOP10 = 185,
     OP_REQUIRE_COINSTAKE = 185,// DIVI vault support (alias of OP_NOP10)
     OP_CHECKSIGADD = 186,
-    // DIVI-specific opcodes
     OP_CHECKCOLDSTAKEVERIFY_LOF = 209,// Last output free for masternode/budget payments
     OP_CHECKCOLDSTAKEVERIFY = 210,// Cold staking verification
     OP_EXCHANGEADDR = 224,// Exchange address

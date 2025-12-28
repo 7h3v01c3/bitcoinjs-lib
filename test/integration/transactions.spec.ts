@@ -453,6 +453,68 @@ describe('bitcoinjs-lib (transactions with psbt)', () => {
 
   it(
     'can create (and broadcast via 3PBP) a Transaction, w/ a ' +
+      'P2WSH(P2MS(20 of 20)) input',
+    async () => {
+      const keys = [];
+      for (let i = 0; i < 20; i++) {
+        keys.push(ECPair.makeRandom({ network: regtest, rng }));
+      }
+
+      const multisig = createPayment('p2wsh-p2ms(20 of 20)', keys);
+
+      const inputData = await getInputData(
+        5e5,
+        multisig.payment,
+        true,
+        'p2wsh',
+      );
+      {
+        const { hash, index, witnessUtxo, witnessScript } = inputData;
+        assert.deepStrictEqual(
+          { hash, index, witnessUtxo, witnessScript },
+          inputData,
+        );
+      }
+
+      const psbt = new bitcoin.Psbt({ network: regtest })
+        .addInput(inputData)
+        .addOutput({
+          address: regtestUtils.RANDOM_ADDRESS,
+          value: BigInt(3e5),
+        });
+
+      for (let i = 0; i < 20; i++) {
+        psbt.signInput(0, multisig.keys[i]);
+      }
+
+      for (let i = 0; i < 20; i++) {
+        assert.strictEqual(
+          psbt.validateSignaturesOfInput(
+            0,
+            validator,
+            multisig.keys[i].publicKey,
+          ),
+          true,
+        );
+      }
+
+      psbt.finalizeAllInputs();
+
+      const tx = psbt.extractTransaction();
+
+      await regtestUtils.broadcast(tx.toHex());
+
+      await regtestUtils.verify({
+        txId: tx.getId(),
+        address: regtestUtils.RANDOM_ADDRESS,
+        vout: 0,
+        value: 3e5,
+      });
+    },
+  );
+
+  it(
+    'can create (and broadcast via 3PBP) a Transaction, w/ a ' +
       'P2SH(P2WSH(P2MS(3 of 4))) (SegWit multisig) input',
     async () => {
       const p2sh = createPayment('p2sh-p2wsh-p2ms(3 of 4)');

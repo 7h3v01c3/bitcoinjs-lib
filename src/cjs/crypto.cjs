@@ -44,7 +44,12 @@ var __importStar =
     return result;
   };
 Object.defineProperty(exports, '__esModule', { value: true });
-exports.TAGGED_HASH_PREFIXES = exports.TAGS = void 0;
+exports.TAGGED_HASH_PREFIXES =
+  exports.TAGS =
+  exports.sha1 =
+  exports.sha256 =
+  exports.ripemd160 =
+    void 0;
 exports.hash160 = hash160;
 exports.hash256 = hash256;
 exports.taggedHash = taggedHash;
@@ -55,8 +60,27 @@ exports.taggedHash = taggedHash;
  * @packageDocumentation
  */
 const ripemd160_1 = require('@noble/hashes/ripemd160');
+Object.defineProperty(exports, 'ripemd160', {
+  enumerable: true,
+  get: function () {
+    return ripemd160_1.ripemd160;
+  },
+});
 const sha256_1 = require('@noble/hashes/sha256');
+Object.defineProperty(exports, 'sha256', {
+  enumerable: true,
+  get: function () {
+    return sha256_1.sha256;
+  },
+});
 const tools = __importStar(require('uint8array-tools'));
+var sha1_1 = require('@noble/hashes/sha1');
+Object.defineProperty(exports, 'sha1', {
+  enumerable: true,
+  get: function () {
+    return sha1_1.sha1;
+  },
+});
 /**
  * Computes the HASH160 (RIPEMD-160 after SHA-256) of the given buffer.
  *

@@ -8,6 +8,9 @@ import { ripemd160 } from '@noble/hashes/ripemd160';
 import { sha256 } from '@noble/hashes/sha256';
 import * as tools from 'uint8array-tools';
 
+export { ripemd160, sha256 };
+export { sha1 } from '@noble/hashes/sha1';
+
 /**
  * Computes the HASH160 (RIPEMD-160 after SHA-256) of the given buffer.
  *

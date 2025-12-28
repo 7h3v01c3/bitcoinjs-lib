@@ -1,4 +1,14 @@
 /**
+ * A module for hashing functions.
+ * include ripemd160、sha1、sha256、hash160、hash256、taggedHash
+ *
+ * @packageDocumentation
+ */
+import { ripemd160 } from '@noble/hashes/ripemd160';
+import { sha256 } from '@noble/hashes/sha256';
+export { ripemd160, sha256 };
+export { sha1 } from '@noble/hashes/sha1';
+/**
  * Computes the HASH160 (RIPEMD-160 after SHA-256) of the given buffer.
  *
  * @param buffer - The input data to be hashed.
@@ -43,4 +53,3 @@ export declare const TAGGED_HASH_PREFIXES: TaggedHashPrefixes;
  * @returns The resulting tagged hash as a `Uint8Array`.
  */
 export declare function taggedHash(prefix: TaggedHashPrefix, data: Uint8Array): Uint8Array;
-export {};

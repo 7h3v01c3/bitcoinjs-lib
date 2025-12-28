@@ -1,5 +1,6 @@
 import { bitcoin as BITCOIN_NETWORK } from '../networks.js';
 import * as bscript from '../script.js';
+import * as scriptNumber from '../script_number.js';
 import { BufferSchema, isPoint, stacksEqual } from '../types.js';
 import { Payment, PaymentOpts, Stack } from './index.js';
 import * as lazy from './lazy.js';
@@ -8,6 +9,22 @@ const OPS = bscript.OPS;
 
 const OP_INT_BASE = OPS.OP_RESERVED; // OP_1 - 1
 
+function encodeSmallOrScriptNum(n: number): number | Uint8Array {
+  return n <= 16 ? OP_INT_BASE + n : scriptNumber.encode(n);
+}
+function decodeSmallOrScriptNum(chunk: number | Uint8Array): number {
+  if (typeof chunk === 'number') {
+    const val = chunk - OP_INT_BASE;
+    if (val < 1 || val > 16)
+      throw new TypeError(`Invalid opcode: expected OP_1–OP_16, got ${chunk}`);
+    return val;
+  } else return scriptNumber.decode(chunk);
+}
+function isSmallOrScriptNum(chunk: number | Uint8Array): boolean {
+  if (typeof chunk === 'number')
+    return chunk - OP_INT_BASE >= 1 && chunk - OP_INT_BASE <= 16;
+  else return Number.isInteger(scriptNumber.decode(chunk));
+}
 // input: OP_0 [signatures ...]
 // output: m [pubKeys ...] n OP_CHECKMULTISIG
 /**
@@ -65,8 +82,9 @@ export function p2ms(a: Payment, opts?: PaymentOpts): Payment {
     if (decoded) return;
     decoded = true;
     chunks = bscript.decompile(output) as Stack;
-    o.m = (chunks[0] as number) - OP_INT_BASE;
-    o.n = (chunks[chunks.length - 2] as number) - OP_INT_BASE;
+    if (chunks.length < 3) throw new TypeError('Output is invalid');
+    o.m = decodeSmallOrScriptNum(chunks[0]);
+    o.n = decodeSmallOrScriptNum(chunks[chunks.length - 2]);
     o.pubkeys = chunks.slice(1, -2) as Uint8Array[];
   }
 
@@ -76,9 +94,9 @@ export function p2ms(a: Payment, opts?: PaymentOpts): Payment {
     if (!a.pubkeys) return;
     return bscript.compile(
       ([] as Stack).concat(
-        OP_INT_BASE + a.m,
+        encodeSmallOrScriptNum(a.m),
         a.pubkeys,
-        OP_INT_BASE + o.n,
+        encodeSmallOrScriptNum(o.n),
         OPS.OP_CHECKMULTISIG,
       ),
     );
@@ -118,14 +136,14 @@ export function p2ms(a: Payment, opts?: PaymentOpts): Payment {
   if (opts.validate) {
     if (a.output) {
       decode(a.output);
-      v.parse(v.number(), chunks[0], { message: 'Output is invalid' });
-      v.parse(v.number(), chunks[chunks.length - 2], {
-        message: 'Output is invalid',
-      });
+      if (!isSmallOrScriptNum(chunks[0]))
+        throw new TypeError('Output is invalid');
+      if (!isSmallOrScriptNum(chunks[chunks.length - 2]))
+        throw new TypeError('Output is invalid');
       if (chunks[chunks.length - 1] !== OPS.OP_CHECKMULTISIG)
         throw new TypeError('Output is invalid');
 
-      if (o.m! <= 0 || o.n! > 16 || o.m! > o.n! || o.n !== chunks.length - 3)
+      if (o.m! <= 0 || o.n! > 20 || o.m! > o.n! || o.n !== chunks.length - 3)
         throw new TypeError('Output is invalid');
       if (!o.pubkeys!.every(x => isPoint(x)))
         throw new TypeError('Output is invalid');

@@ -8,7 +8,7 @@ import { TAGS, TAGGED_HASH_PREFIXES } from 'bitcoinjs-lib/src/crypto';
 import { sha256 } from '@noble/hashes/sha256';
 
 describe('crypto', () => {
-  ['hash160', 'hash256'].forEach(algorithm => {
+  ['hash160', 'hash256', 'ripemd160', 'sha1', 'sha256'].forEach(algorithm => {
     describe(algorithm, () => {
       fixtures.hashes.forEach(f => {
         const fn = (bcrypto as any)[algorithm];

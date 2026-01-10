@@ -1,7 +1,7 @@
 /**
- * This module defines the network configurations for Bitcoin and its variants, including message prefixes,
- * Bech32 address format, BIP32 key derivation prefixes, and other address-related configurations.
- * It supports Bitcoin, Bitcoin testnet, and Bitcoin regtest networks.
+ * This module defines the network configurations for Bitcoin and DIVI networks, including message prefixes,
+ * Bech32 address format (where applicable), BIP32 key derivation prefixes, and other address-related configurations.
+ * It supports Bitcoin mainnet/testnet/regtest and DIVI mainnet/testnet networks.
  *
  * Additional information on address prefixes can be found here:
  * - https://en.bitcoin.it/wiki/List_of_address_prefixes
@@ -10,7 +10,7 @@
  */
 export interface Network {
   messagePrefix: string;
-  bech32: string;
+  bech32: string | undefined;
   bip32: Bip32;
   pubKeyHash: number;
   scriptHash: number;
@@ -86,5 +86,35 @@ export const testnet: Network = {
   },
   pubKeyHash: 0x6f,
   scriptHash: 0xc4,
+  wif: 0xef,
+};
+
+/**
+ * Represents the DIVI mainnet configuration.
+ */
+export const divi: Network = {
+  messagePrefix: '\x19Divi Signed Message:\n',
+  bech32: undefined, // DIVI doesn't use Bech32
+  bip32: {
+    public: 0x0488b21e, // Same as Bitcoin
+    private: 0x0488ade4,
+  },
+  pubKeyHash: 0x1e, // Addresses start with 'D'
+  scriptHash: 0x0d, // Script addresses start with '3'
+  wif: 0x9e, // WIFs start with 'Y'
+};
+
+/**
+ * Represents the DIVI testnet configuration.
+ */
+export const diviTestnet: Network = {
+  messagePrefix: '\x19Divi Signed Message:\n',
+  bech32: undefined,
+  bip32: {
+    public: 0x043587cf,
+    private: 0x04358394,
+  },
+  pubKeyHash: 0x8b, // Testnet address prefix
+  scriptHash: 0x13,
   wif: 0xef,
 };

@@ -91,9 +91,12 @@ export function p2wsh(a: Payment, opts?: PaymentOpts): Payment {
 
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
+    if (!network?.bech32) {
+      throw new TypeError('Network does not support SegWit addresses');
+    }
     const words = bech32.toWords(o.hash);
     words.unshift(0x00);
-    return bech32.encode(network!.bech32, words);
+    return bech32.encode(network.bech32, words);
   });
   lazy.prop(o, 'hash', () => {
     if (a.output) return a.output.slice(2);
@@ -149,7 +152,7 @@ export function p2wsh(a: Payment, opts?: PaymentOpts): Payment {
   if (opts.validate) {
     let hash = Uint8Array.from([]);
     if (a.address) {
-      if (_address().prefix !== network.bech32)
+      if (!network.bech32 || _address().prefix !== network.bech32)
         throw new TypeError('Invalid prefix or Network mismatch');
       if (_address().version !== 0x00)
         throw new TypeError('Invalid address version');

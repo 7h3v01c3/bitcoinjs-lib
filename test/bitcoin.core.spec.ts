@@ -70,6 +70,10 @@ describe('Bitcoin-core', () => {
       bitcoin.networks.bitcoin.scriptHash,
       bitcoin.networks.testnet.pubKeyHash,
       bitcoin.networks.testnet.scriptHash,
+      bitcoin.networks.divi.pubKeyHash,
+      bitcoin.networks.divi.scriptHash,
+      bitcoin.networks.diviTestnet.pubKeyHash,
+      bitcoin.networks.diviTestnet.scriptHash,
     ];
 
     base58KeysInvalid.forEach(f => {

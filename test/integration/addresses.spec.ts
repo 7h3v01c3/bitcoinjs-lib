@@ -145,4 +145,32 @@ describe('bitcoinjs-lib (addresses)', () => {
 
     assert.strictEqual(address!.startsWith('L'), true);
   });
+
+  it('can generate a DIVI mainnet address', () => {
+    const keyPair = ECPair.makeRandom({ network: bitcoin.networks.divi, rng });
+    const { address } = bitcoin.payments.p2pkh({
+      pubkey: keyPair.publicKey,
+      network: bitcoin.networks.divi,
+    });
+
+    // DIVI mainnet P2PKH addresses start with 'D'
+    assert.strictEqual(address!.startsWith('D'), true);
+  });
+
+  it('can generate a DIVI testnet address', () => {
+    const keyPair = ECPair.makeRandom({
+      network: bitcoin.networks.diviTestnet,
+      rng,
+    });
+    const { address } = bitcoin.payments.p2pkh({
+      pubkey: keyPair.publicKey,
+      network: bitcoin.networks.diviTestnet,
+    });
+
+    // DIVI testnet P2PKH addresses start with 'y' or other testnet prefix
+    assert.strictEqual(
+      address!.startsWith('y') || address!.startsWith('Y'),
+      true,
+    );
+  });
 });

@@ -79,6 +79,9 @@ function _toFutureSegwitAddress(output: Uint8Array, network: Network): string {
     WARNING_STATES[0] = true;
   }
 
+  if (!network.bech32) {
+    throw new TypeError('Network does not support Bech32 addresses');
+  }
   return toBech32(data, version, network.bech32);
 }
 
@@ -232,7 +235,7 @@ export function toOutputScript(address: string, network?: Network): Uint8Array {
     } catch (e) {}
 
     if (decodeBech32) {
-      if (decodeBech32.prefix !== network.bech32)
+      if (!network.bech32 || decodeBech32.prefix !== network.bech32)
         throw new Error(address + ' has an invalid prefix');
       if (decodeBech32.version === 0) {
         if (decodeBech32.data.length === 20)

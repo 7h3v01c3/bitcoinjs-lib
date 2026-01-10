@@ -93,6 +93,9 @@ export function p2tr(a, opts) {
   const o = { name: 'p2tr', network };
   lazy.prop(o, 'address', () => {
     if (!o.pubkey) return;
+    if (!network.bech32) {
+      throw new TypeError('Network does not support Taproot addresses');
+    }
     const words = bech32m.toWords(o.pubkey);
     words.unshift(TAPROOT_WITNESS_VERSION);
     return bech32m.encode(network.bech32, words);
@@ -181,7 +184,7 @@ export function p2tr(a, opts) {
   if (opts.validate) {
     let pubkey = Uint8Array.from([]);
     if (a.address) {
-      if (network && network.bech32 !== _address().prefix)
+      if (network && (!network.bech32 || network.bech32 !== _address().prefix))
         throw new TypeError('Invalid prefix or Network mismatch');
       if (_address().version !== TAPROOT_WITNESS_VERSION)
         throw new TypeError('Invalid address version');

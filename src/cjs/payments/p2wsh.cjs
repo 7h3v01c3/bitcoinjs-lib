@@ -119,6 +119,9 @@ function p2wsh(a, opts) {
   const o = { network };
   lazy.prop(o, 'address', () => {
     if (!o.hash) return;
+    if (!network?.bech32) {
+      throw new TypeError('Network does not support SegWit addresses');
+    }
     const words = bech32_1.bech32.toWords(o.hash);
     words.unshift(0x00);
     return bech32_1.bech32.encode(network.bech32, words);
@@ -175,7 +178,7 @@ function p2wsh(a, opts) {
   if (opts.validate) {
     let hash = Uint8Array.from([]);
     if (a.address) {
-      if (_address().prefix !== network.bech32)
+      if (!network.bech32 || _address().prefix !== network.bech32)
         throw new TypeError('Invalid prefix or Network mismatch');
       if (_address().version !== 0x00)
         throw new TypeError('Invalid address version');

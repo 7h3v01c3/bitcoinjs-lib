@@ -64,3 +64,31 @@ export const testnet = {
   scriptHash: 0xc4,
   wif: 0xef,
 };
+/**
+ * Represents the DIVI mainnet configuration.
+ */
+export const divi = {
+  messagePrefix: '\x19Divi Signed Message:\n',
+  bech32: undefined, // DIVI doesn't use Bech32
+  bip32: {
+    public: 0x0488b21e, // Same as Bitcoin
+    private: 0x0488ade4,
+  },
+  pubKeyHash: 0x1e, // Addresses start with 'D'
+  scriptHash: 0x0d, // Script addresses start with '3'
+  wif: 0x9e, // WIFs start with 'Y'
+};
+/**
+ * Represents the DIVI testnet configuration.
+ */
+export const diviTestnet = {
+  messagePrefix: '\x19Divi Signed Message:\n',
+  bech32: undefined,
+  bip32: {
+    public: 0x043587cf,
+    private: 0x04358394,
+  },
+  pubKeyHash: 0x8b, // Testnet address prefix
+  scriptHash: 0x13,
+  wif: 0xef,
+};

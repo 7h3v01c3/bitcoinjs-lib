@@ -148,4 +148,53 @@ describe('bitcoinjs-lib (BIP32)', () => {
       '1EAvj4edpsWcSer3duybAd4KiR4bCJW5J6',
     );
   });
+
+  it('can create a BIP32 DIVI mainnet address', () => {
+    const mnemonic =
+      'praise you muffin lion enable neck grocery crumble super myself license ghost';
+    const seed = bip39.mnemonicToSeedSync(mnemonic);
+    const root = bip32.fromSeed(seed);
+
+    const path = "m/0'/0/0";
+    const child = root.derivePath(path);
+
+    const address = getAddress(child, bitcoin.networks.divi);
+
+    // DIVI mainnet addresses start with 'D'
+    assert.strictEqual(address.startsWith('D'), true);
+  });
+
+  it('can create a BIP44 DIVI mainnet address', () => {
+    const mnemonic =
+      'praise you muffin lion enable neck grocery crumble super myself license ghost';
+    const seed = bip39.mnemonicToSeedSync(mnemonic);
+    const root = bip32.fromSeed(seed);
+
+    // DIVI coin type is 301
+    const path = "m/44'/301'/0'/0/0";
+    const child = root.derivePath(path);
+
+    const address = getAddress(child, bitcoin.networks.divi);
+
+    // DIVI mainnet addresses start with 'D'
+    assert.strictEqual(address.startsWith('D'), true);
+  });
+
+  it('can create a BIP32 DIVI testnet address', () => {
+    const mnemonic =
+      'praise you muffin lion enable neck grocery crumble super myself license ghost';
+    const seed = bip39.mnemonicToSeedSync(mnemonic);
+    const root = bip32.fromSeed(seed);
+
+    const path = "m/0'/0/0";
+    const child = root.derivePath(path);
+
+    const address = getAddress(child, bitcoin.networks.diviTestnet);
+
+    // DIVI testnet addresses start with 'y' or other testnet prefix
+    assert.strictEqual(
+      address.startsWith('y') || address.startsWith('Y'),
+      true,
+    );
+  });
 });

@@ -22,6 +22,8 @@ const NETWORKS: Record<string, networks.Network> = {
     scriptHash: 0x32,
     wif: 0xb0,
   } as networks.Network,
+  divi: networks.divi,
+  diviTestnet: networks.diviTestnet,
 };
 
 describe('address', () => {
